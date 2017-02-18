@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="AudioWaveDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CGe-gZ-111">
+                                <rect key="frame" x="285" y="285" width="30" height="30"/>
+                                <state key="normal" image="play_.png"/>
+                                <connections>
+                                    <action selector="playPauseButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WWi-Qf-qn9"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="704-8e-tWi">
+                                <rect key="frame" x="395" y="289" width="46" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tJW-fy-pID">
+                                <rect key="frame" x="159" y="289" width="46" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nlB-jO-gGe">
+                                <rect key="frame" x="180" y="174" width="240" height="66"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="F0h-LQ-xR4"/>
+                                    <constraint firstAttribute="height" constant="66" id="gdn-Jf-meR"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="CGe-gZ-111" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="79F-eB-9h2"/>
+                            <constraint firstItem="704-8e-tWi" firstAttribute="centerY" secondItem="CGe-gZ-111" secondAttribute="centerY" id="9sT-j4-EiJ"/>
+                            <constraint firstItem="CGe-gZ-111" firstAttribute="leading" secondItem="tJW-fy-pID" secondAttribute="trailing" constant="80" id="NVX-Ea-5YC"/>
+                            <constraint firstItem="CGe-gZ-111" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="UlF-U1-YbU"/>
+                            <constraint firstItem="CGe-gZ-111" firstAttribute="top" secondItem="nlB-jO-gGe" secondAttribute="bottom" constant="45" id="fdL-N2-hHH"/>
+                            <constraint firstItem="nlB-jO-gGe" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rPp-4m-LG1"/>
+                            <constraint firstItem="tJW-fy-pID" firstAttribute="centerY" secondItem="CGe-gZ-111" secondAttribute="centerY" id="vr8-XY-xJv"/>
+                            <constraint firstItem="704-8e-tWi" firstAttribute="leading" secondItem="CGe-gZ-111" secondAttribute="trailing" constant="80" id="xfr-BR-n2a"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="currentTimeLabel" destination="tJW-fy-pID" id="J0a-6c-zLQ"/>
+                        <outlet property="playPauseButton" destination="CGe-gZ-111" id="BQr-AD-G4y"/>
+                        <outlet property="remainingTimeLabel" destination="704-8e-tWi" id="Eae-jS-nCs"/>
+                        <outlet property="visualizerView" destination="nlB-jO-gGe" id="M87-p0-GVx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="686" y="418"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="play_.png" width="30" height="30"/>
+    </resources>
+</document>
