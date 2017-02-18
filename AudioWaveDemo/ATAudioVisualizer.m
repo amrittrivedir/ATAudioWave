@@ -82,8 +82,6 @@
 
 - (void) animateAudioVisualizerWithChannel0Level:(float)level0 andChannel1Level:(float)level1
 {
-    NSLog(@"level 0 == %f",level0);
-    NSLog(@"level 1 == %f",level1);
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:animateDuration
                               delay:0.0

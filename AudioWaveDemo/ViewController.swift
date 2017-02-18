@@ -11,7 +11,7 @@ class ViewController: UIViewController,AVAudioPlayerDelegate {
     @IBOutlet weak var remainingTimeLabel: UILabel!
     @IBOutlet weak var playPauseButton: UIButton!
     
-    var visualizerTimer:NSTimer! = NSTimer()
+    var visualizerTimer:Timer! = Timer()
     var lowPassResults1:Double! = 0.0
     var lowPassResult:Double! = 0.0
     var audioPlayer:AVAudioPlayer!
@@ -30,27 +30,23 @@ class ViewController: UIViewController,AVAudioPlayerDelegate {
     
     func initObservers()
     {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.didEnterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.didEnterForeground), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.didEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.didEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
 
     }
     
     func initAudioPlayer() {
-        let url = NSURL.fileURLWithPath(NSBundle.mainBundle().pathForResource("Boys Edit Final", ofType: "mp3")!)
-        var error: NSError?
+        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "Boys Edit Final", ofType: "mp3")!)
+        let error: NSError?
         do {
-            self.audioPlayer = try AVAudioPlayer(contentsOfURL: url)
+            self.audioPlayer = try AVAudioPlayer(contentsOf: url)
         }
         catch let error {
+            print(error)
         }
-        audioPlayer.meteringEnabled = true
-        if error != nil {
-            print("Error in audioPlayer: \(error!.localizedDescription)")
-        }
-        else {
-            self.audioPlayer.delegate = self
-            audioPlayer.prepareToPlay()
-        }
+        audioPlayer.isMeteringEnabled = true
+        self.audioPlayer.delegate = self
+        audioPlayer.prepareToPlay()
     }
     
     
@@ -70,7 +66,7 @@ class ViewController: UIViewController,AVAudioPlayerDelegate {
     
     func didEnterForeground()
     {
-        if self.playPauseButton.selected
+        if self.playPauseButton.isSelected
         {
             self.startAudioVisualizer()
         }
@@ -84,7 +80,7 @@ class ViewController: UIViewController,AVAudioPlayerDelegate {
             visualizerTimer = nil
             
         }
-        visualizerTimer = NSTimer.scheduledTimerWithTimeInterval(visualizerAnimationDuration, target: self, selector: #selector(visualizerTimerChanged), userInfo: nil, repeats: true)
+        visualizerTimer = Timer.scheduledTimer(timeInterval: visualizerAnimationDuration, target: self, selector: #selector(visualizerTimerChanged), userInfo: nil, repeats: true)
         
     }
     
@@ -96,20 +92,20 @@ class ViewController: UIViewController,AVAudioPlayerDelegate {
             visualizerTimer = nil
             
         }
-        audioVisualizer.stopAudioVisualizer()
+        audioVisualizer.stop()
 
     }
     
-    func visualizerTimerChanged(timer:CADisplayLink)
+    func visualizerTimerChanged(_ timer:CADisplayLink)
     {
         audioPlayer.updateMeters()
         let ALPHA: Double = 1.05
-        let averagePower: Double =  Double(audioPlayer.averagePowerForChannel(0))
+        let averagePower: Double =  Double(audioPlayer.averagePower(forChannel: 0))
         let averagePowerForChannel: Double = pow(10, (0.05 * averagePower))
         lowPassResult = ALPHA * averagePowerForChannel + (1.0 - ALPHA) * lowPassResult
-        let averagePowerForChannel1: Double = pow(10, (0.05 * Double(audioPlayer.averagePowerForChannel(1))))
+        let averagePowerForChannel1: Double = pow(10, (0.05 * Double(audioPlayer.averagePower(forChannel: 1))))
         lowPassResults1 = ALPHA * averagePowerForChannel1 + (1.0 - ALPHA) * lowPassResults1
-        audioVisualizer.animateAudioVisualizerWithChannel0Level(self._normalizedPowerLevelFromDecibels(audioPlayer.averagePowerForChannel(0)), andChannel1Level: self._normalizedPowerLevelFromDecibels(audioPlayer.averagePowerForChannel(1)))
+        audioVisualizer.animate(withChannel0Level: self._normalizedPowerLevelFromDecibels(audioPlayer.averagePower(forChannel: 0)), andChannel1Level: self._normalizedPowerLevelFromDecibels(audioPlayer.averagePower(forChannel: 1)))
         self.updateLabels()
 
     }
@@ -121,7 +117,7 @@ class ViewController: UIViewController,AVAudioPlayerDelegate {
     }
     
     
-    func convertSeconds(secs: Float) -> String {
+    func convertSeconds(_ secs: Float) -> String {
         var currentSecs = secs
         if currentSecs < 0.1 {
             currentSecs = 0
@@ -139,7 +135,7 @@ class ViewController: UIViewController,AVAudioPlayerDelegate {
         return String(format: "%02d:%02d", minutes, seconds)
     }
 
-    func _normalizedPowerLevelFromDecibels(decibels: Float) -> Float {
+    func _normalizedPowerLevelFromDecibels(_ decibels: Float) -> Float {
         if decibels < -60.0 || decibels == 0.0 {
             return 0.0
         }
@@ -151,38 +147,38 @@ class ViewController: UIViewController,AVAudioPlayerDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func playPauseButtonPressed(sender: AnyObject) {
-        if playPauseButton.selected {
+    @IBAction func playPauseButtonPressed(_ sender: AnyObject) {
+        if playPauseButton.isSelected {
             audioPlayer.pause()
-            playPauseButton.setImage(UIImage(named: "play_")!, forState: .Normal)
-            playPauseButton.setImage(UIImage(named: "play")!, forState: .Highlighted)
-            playPauseButton.selected = false
+            playPauseButton.setImage(UIImage(named: "play_")!, for: UIControlState())
+            playPauseButton.setImage(UIImage(named: "play")!, for: .highlighted)
+            playPauseButton.isSelected = false
             self.stopAudioVisualizer()
         }
         else {
             audioPlayer.play()
-            playPauseButton.setImage(UIImage(named: "pause_")!, forState: .Normal)
-            playPauseButton.setImage(UIImage(named: "pause")!, forState: .Highlighted)
-            playPauseButton.selected = true
+            playPauseButton.setImage(UIImage(named: "pause_")!, for: UIControlState())
+            playPauseButton.setImage(UIImage(named: "pause")!, for: .highlighted)
+            playPauseButton.isSelected = true
             self.startAudioVisualizer()
         }
     }
 
-    func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool) {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         print("audioPlayerDidFinishPlaying")
-        playPauseButton.setImage(UIImage(named: "play_")!, forState: .Normal)
-        playPauseButton.setImage(UIImage(named: "play")!, forState: .Highlighted)
-        playPauseButton.selected = false
+        playPauseButton.setImage(UIImage(named: "play_")!, for: UIControlState())
+        playPauseButton.setImage(UIImage(named: "play")!, for: .highlighted)
+        playPauseButton.isSelected = false
         self.currentTimeLabel.text! = "00:00"
         self.remainingTimeLabel.text! = self.convertSeconds(Float(audioPlayer.duration))
         self.stopAudioVisualizer()
     }
     
-    func audioPlayerDecodeErrorDidOccur(player: AVAudioPlayer, error: NSError?) {
+    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         print("audioPlayerDecodeErrorDidOccur")
-        playPauseButton.setImage(UIImage(named: "play_")!, forState: .Normal)
-        playPauseButton.setImage(UIImage(named: "play")!, forState: .Highlighted)
-        playPauseButton.selected = false
+        playPauseButton.setImage(UIImage(named: "play_")!, for: UIControlState())
+        playPauseButton.setImage(UIImage(named: "play")!, for: .highlighted)
+        playPauseButton.isSelected = false
         self.currentTimeLabel.text! = "00:00"
         self.remainingTimeLabel.text! = "00:00"
         self.stopAudioVisualizer()
